@@ -1,0 +1,13 @@
+# Node dependencies
+node_modules/
+
+# Ignore the massive auto-generated database 
+example/db.json
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+
+## Example Database
