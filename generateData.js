@@ -1,4 +1,4 @@
-// Helper script to generate a sample database
+// Helper script to generate a sample database -> example/db.js
 // To run: node generateData.js
 
 const fs = require('fs');
