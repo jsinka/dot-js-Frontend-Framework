@@ -1,5 +1,6 @@
 # dot-js Framework
 
+
 ## Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture & Design Principles](#architecture--design-principles)

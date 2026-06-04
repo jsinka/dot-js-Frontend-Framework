@@ -137,3 +137,22 @@
 - **Kanban is the right example app.** It naturally exercises drag events, shared state, routing, HTTP fetching, and forms — every required feature in one coherent project.
 - **Virtualised list is the cleanest performance story.** It's visually demonstrable in the review, well understood, and doesn't complicate the rest of the framework.
 - **B is the quality gate.** The test suite is the only check against integration failures. B should run it after every major merge.
+
+
+## dot-js-project/
+│
+├── framework/                  # Contains your framework and documentation
+│   ├── README.md               # Mandatory documentation file
+│   ├── index.js                # The bundled framework exported as a single file 
+│   └── src/                    # Source files for members A & B
+│       ├── dom.js              # createElement, nest, attrs/styles
+│       ├── state.js            # createStore, get, set, subscribe 
+│       ├── events.js           # Event registration, delegation, bubbling
+│       ├── router.js           # Hash-based router, navigate
+│       └── http.js             # http.get/post wrapper
+│
+└── example/                    # Contains your example Kanban project
+    ├── index.html              # The scaffolded entry point 
+    ├── app.js                  # Main application logic wiring up components, state, and router
+    ├── styles.css              # Styling for the Kanban board and detail views
+    └── db.json                 # Mock API data (e.g., for json-server) to fetch cards
