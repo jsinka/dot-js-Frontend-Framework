@@ -1,6 +1,9 @@
 # Node dependencies
 node_modules/
 
+# IDE
+.idea/
+
 # Ignore the massive auto-generated database 
 example/db.json
 
