@@ -13,4 +13,7 @@ example/db.json
 # Windows system files
 Thumbs.db
 
+# JS compiling error-catch config
+jsconfig.json
+
 ## Example Database
