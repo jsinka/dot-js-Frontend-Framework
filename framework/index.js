@@ -1,7 +1,3 @@
-import { test } from "./src/component.js"
-
-export { test };
-
 // dot-js — single entry point
 // Import everything via: import { createStore, on, http, router, ... } from './framework/index.js'
 
