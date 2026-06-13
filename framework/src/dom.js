@@ -12,10 +12,11 @@ export const createElement = (tagName, props = {}) => {
         if (!Object.hasOwn(props, key)) continue;
         
         if (key === 'events') {
-            // TODO: delegate to B's on() system
-            // Expected call: on(newElement, events)
-            // Do NOT use addEventListener directly — all event registration must go through on()
-            // Wire this in once B confirms the final signature of on()
+            // INTEGRATION (B): delegate to bindEvents(newElement, props.events) from events.js
+            // props.events shape: { eventName: handler }  OR  { eventName: { handler, delegate, prevent, stop } }
+            // Do NOT use addEventListener directly — all event registration goes through bindEvents/on
+            // bindEvents returns a cleanup fn; listener teardown on unmount relies on B's MutationObserver (see component.js unmount)
+            // TODO Day 2: import bindEvents and wire this in
         }
 
         else if (key === 'style') {
