@@ -53,19 +53,20 @@ Event listeners are passed under a dedicated `events` key in the props object, c
 
 The `events` value is a plain object where:
 - Keys are plain event names with no prefix — `click`, `input`, `submit`, not `onClick` or `on-click`
-- Values are single handler functions — one handler per event name
+- **[sync] Values follow B's richer shape:** either a bare handler function, OR an options object `{ handler, delegate, prevent, stop }` for delegation, `preventDefault`, and `stopPropagation`.
 
 Example shape:
 ```
 events: {
-  click: handleClick,
-  input: handleInput
+  click: handleClick,                                  // bare handler
+  submit: { handler: onSubmit, prevent: true },        // with preventDefault
+  click: { handler: onCardClick, delegate: '.card' }   // delegated
 }
 ```
 
-### 4b. Routing through B's `on()` system
+### 4b. Routing through B's event system  **[sync — updated]**
 
-Event listeners are **never** registered via `addEventListener` directly inside `dom.js`. All event registration is delegated to B's `on()` function. During Day 1 implementation, the call site is written as a stub that assumes the signature `on(element, eventName, handler)`. B's real implementation replaces the stub once it is ready.
+Event listeners are **never** registered via `addEventListener` directly inside `dom.js`. The `events` branch in `createElement` delegates the whole events object to **`bindEvents(element, props.events)`** from `events.js` (not `on()` directly — `bindEvents` loops over the object and calls `on()` per entry, and supports the richer value shape above). `bindEvents` returns a cleanup function; listener teardown on unmount is handled by B's MutationObserver via `offAll`, so the cleanup function does not need to be stored by `createElement`. To be wired in on Day 2.
 
 ---
 
