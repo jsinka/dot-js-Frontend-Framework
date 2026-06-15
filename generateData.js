@@ -3,7 +3,12 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const cardCount = 10;
+
+// Grab the arguments and parse the first one as an integer.
+// Default to 1000 if no argument is passed or if it's not a valid number.
+const args = process.argv.slice(2);
+const input = parseInt(args[0], 10);
+const cardCount = isNaN(input) ? 10 : input;
 
 const tasks = [
   'Buy groceries', 'Call friends', 'Clean the kitchen', 'Laundry',
