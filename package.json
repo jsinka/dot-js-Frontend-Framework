@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "test": "node tests/run.js"
+    "test": "node tests/run.js",
+    "server": "node server.js",
+    "data": "node generateData.js"
   }
 }
