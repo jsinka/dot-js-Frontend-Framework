@@ -69,10 +69,18 @@ The server handles two things:
 - Serves all project files as static assets.
 - Provides a REST API at `http://localhost:3000/api/cards` backed by `example/db.json`.
 
-To regenerate the sample data:
+To regenerate the sample data (default 10 cards):
 
 ```bash
 node generateData.js
+```
+
+If you want to generate a specific number of cards, you can pass the desired amount as an argument at the end of the command.
+
+For example, to generate exactly 5000 cards:
+
+```bash
+node generateData.js 5000
 ```
 
 ---
