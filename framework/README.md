@@ -60,16 +60,9 @@ Clone the repo and start the dev server. No `npm install` needed — the server 
 ```bash
 git clone https://gitea.kood.tech/jorgensinka/frontend-framework.git
 cd frontend-framework
-node server.js
 ```
 
-Then open `http://localhost:3000/example/` in your browser.
-
-The server handles two things:
-- Serves all project files as static assets.
-- Provides a REST API at `http://localhost:3000/api/cards` backed by `example/db.json`.
-
-To regenerate the sample data (default 10 cards):
+To (re)generate the sample data (default 10 cards):
 
 ```bash
 node generateData.js
@@ -82,6 +75,17 @@ For example, to generate exactly 5000 cards:
 ```bash
 node generateData.js 5000
 ```
+Start the server:
+
+```bash
+node server.js
+```
+
+Then open `http://localhost:3000/example/` in your browser.
+
+The server handles two things:
+- Serves all project files as static assets.
+- Provides a REST API at `http://localhost:3000/api/cards` backed by `example/db.json`.
 
 ---
 
