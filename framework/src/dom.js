@@ -1,61 +1,58 @@
-const propertyList = new Set([ 'value', 'checked', 'selected', 'disabled', 'textContent']);
-let weakMap = new WeakMap();
+import { on } from './events.js';
 
-export const createElement = (tagName, props = {}) => {
-    if (props === null) {
-        props = {};
+const DIRECT_PROPS = new Set(['value', 'checked', 'selected', 'disabled', 'textContent']);
+
+export function createElement(tag, props = {}) {
+  const el = document.createElement(tag);
+
+  for (const [key, val] of Object.entries(props)) {
+    if (key === 'events') {
+      for (const [event, spec] of Object.entries(val)) {
+        if (typeof spec === 'function') {
+          on(el, event, spec);
+        } else {
+          const { handler, ...opts } = spec;
+          on(el, event, handler, opts);
+        }
+      }
+    } else if (key === 'style') {
+      for (const [prop, value] of Object.entries(val)) {
+        el.style[prop] = value;
+      }
+    } else if (key === 'className') {
+      el.className = val;
+    } else if (DIRECT_PROPS.has(key)) {
+      el[key] = val;
+    } else {
+      el.setAttribute(key, val);
     }
+  }
 
-    const newElement = document.createElement(tagName);
-    
-    for (const key in props) {
-        if (!Object.hasOwn(props, key)) continue;
-        
-        if (key === 'events') {
-            // INTEGRATION (B): delegate to bindEvents(newElement, props.events) from events.js
-            // props.events shape: { eventName: handler }  OR  { eventName: { handler, delegate, prevent, stop } }
-            // Do NOT use addEventListener directly — all event registration goes through bindEvents/on
-            // bindEvents returns a cleanup fn; listener teardown on unmount relies on B's MutationObserver (see component.js unmount)
-            // TODO Day 2: import bindEvents and wire this in
-        }
-
-        else if (key === 'style') {
-            for (const styleKey in props.style) {
-                newElement.style[styleKey] = props.style[styleKey];
-            }
-        }
-        
-        else if (key === 'className') {
-            newElement.className = props[key];
-        }
-
-        else if (propertyList.has(key)) {
-            newElement[key] = props[key];
-        }
-
-        else { newElement.setAttribute(key, props[key]) };
-    }
-
-    return newElement;
+  return el;
 }
 
-export const nest = (parentElement, ...children) => {
-    const flatChildArray = children.flat();
+export function nest(parent, ...children) {
+  for (const child of children.flat()) {
+    if (child == null) continue;
+    parent.appendChild(typeof child === 'string' ? document.createTextNode(child) : child);
+  }
+  return parent;
+}
 
-    for (const element of flatChildArray) {
-        if (element === null || element === undefined) {
-            continue;
-        }
-        else if (typeof element === 'string') {
-            parentElement.append(document.createTextNode(element));
-        }
-        else if (element instanceof Element) {
-            parentElement.appendChild(element);
-        }
-        else {
-            throw new Error("nest() received an unsupported child type: " + element);
-        }
-    };
+export function lazyList(container, items, renderItem, batchSize = 20) {
+  let index = 0;
+  let cancelled = false;
 
-    return parentElement;
+  function batch() {
+    if (cancelled) return;
+    const end = Math.min(index + batchSize, items.length);
+    while (index < end) {
+      container.appendChild(renderItem(items[index]));
+      index++;
+    }
+    if (index < items.length) requestAnimationFrame(batch);
+  }
+
+  requestAnimationFrame(batch);
+  return () => { cancelled = true; };
 }

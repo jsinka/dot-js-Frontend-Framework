@@ -1,53 +1,38 @@
-// Helper script to generate a sample database -> example/db.js
-// To run: node generateData.js
+import { writeFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-const fs = require('fs');
-const path = require('path');
-const cardCount = 10;
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const generateCards = (count) => {
-  const statuses = ['todo', 'in-progress', 'done'];
-  
-  // Pool of basic, popular tasks
-  const tasks = [
-    "Buy groceries", "Call friends", "Clean the kitchen", "Laundry", 
-    "Pay electric bill", "Gym session", "Walk the dog", "Read a chapter of a book", 
-    "Schedule dentist appointment", "Water the plants", "Vacuum the living room",
-    "Take out the recycling", "Meal prep for the week", "Wash the car",
-    "Change bed sheets", "Reply to pending emails", "Mow the lawn",
-    "Organize the hall closet", "Buy a birthday gift", "Update computer software",
-    "Dust the bookshelves", "Pay internet bill", "Clean out the fridge",
-    "Go for a 30-minute run", "Pick up dry cleaning", "Renew car insurance",
-    "Take vitamins", "Unload the dishwasher", "Fill up the gas tank",
-    "Review monthly budget"
-  ];
+// Grab the arguments and parse the first one as an integer.
+// Default to 10 if no argument is passed or if it's not a valid number.
+const args = process.argv.slice(2);
+const input = parseInt(args[0], 10);
+const cardCount = isNaN(input) ? 10 : input;
 
-  const cards = [];
+const tasks = [
+  'Buy groceries', 'Call friends', 'Clean the kitchen', 'Laundry',
+  'Pay electric bill', 'Gym session', 'Walk the dog', 'Read a chapter of a book',
+  'Schedule dentist appointment', 'Water the plants', 'Vacuum the living room',
+  'Take out the recycling', 'Meal prep for the week', 'Wash the car',
+  'Change bed sheets', 'Reply to pending emails', 'Mow the lawn',
+  'Organize the hall closet', 'Buy a birthday gift', 'Update computer software',
+  'Dust the bookshelves', 'Pay internet bill', 'Clean out the fridge',
+  'Go for a 30-minute run', 'Pick up dry cleaning', 'Renew car insurance',
+  'Take vitamins', 'Unload the dishwasher', 'Fill up the gas tank',
+  'Review monthly budget',
+];
 
-  for (let i = 1; i <= count; i++) {
-    // Pick a random task title and status
-    const randomTask = tasks[Math.floor(Math.random() * tasks.length)];
-    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-    
-    cards.push({
-      id: `c${i}`,
-      title: `${randomTask} #${i}`,
-      description: `Auto-generated description for task ${i}.`,
-      status: randomStatus,
-      // Generate a random past date
-      createdAt: Date.now() - Math.floor(Math.random() * 10000000000) 
-    });
-  }
+const statuses = ['todo', 'in-progress', 'done'];
 
-  return { cards };
-};
+const cards = Array.from({ length: cardCount }, (_, i) => ({
+  id: `c${i + 1}`,
+  title: `${tasks[Math.floor(Math.random() * tasks.length)]} #${i + 1}`,
+  description: `Auto-generated description for task ${i + 1}.`,
+  status: statuses[Math.floor(Math.random() * statuses.length)],
+  createdAt: Date.now() - Math.floor(Math.random() * 10_000_000_000),
+}));
 
-const data = generateCards(cardCount);
-
-// Define the path to db.json file
-const dbPath = path.join(__dirname, 'example', 'db.json');
-
-// Write the data to the file
-fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
-
-console.log(`Successfully generated ${cardCount} cards in ${dbPath}`);
+const dbPath = resolve(__dirname, 'example', 'db.json');
+writeFileSync(dbPath, JSON.stringify({ cards }, null, 2));
+console.log(`Generated ${cardCount} cards → ${dbPath}`);
