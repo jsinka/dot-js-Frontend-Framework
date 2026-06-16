@@ -13,4 +13,7 @@ example/db.json
 # Windows system files
 Thumbs.db
 
+# Personal code debug conf
+jsconfig.json
+
 ## Example Database
